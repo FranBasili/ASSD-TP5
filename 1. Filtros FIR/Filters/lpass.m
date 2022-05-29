@@ -6,8 +6,8 @@ close all
 fs=10000;
 fp=700;
 fa=2000;
-Ap=1;
-Aa=40;
+Ap=1
+Aa=20
 
 
 
@@ -55,8 +55,8 @@ fc=(fp+fa)/2;	 %frecuencia de corte normalizada respecto de fs
 
 %===========================Construccion de la h(n)====================================
 n=1:(N-1)/2;
-h(n)=-(sin(2*pi*fc*n)./(pi*n));         % h(n) for HighPass
-h=[ h(((N-1)/2 ):-1:1) 1-2*fc h];       % La hacemos causal 
+h(n)=2*fc*(sin(2*pi*fc*n)./(2*pi*fc*n)); % h(n) for Lowpass
+h=[ h(((N-1)/2 ):-1:1) 2*fc h];          % La hacemos causal 
 %==========================================================================
 % Multiplicamos por la ventana de kaiser
 
@@ -64,7 +64,7 @@ h=h.*kai(N,alfa)';
 
 %=================Normalizamos la respuesta en frecuencia del filtro en banda pasante=====================================
 
-F0dB=fs/2;                    % F0dB es la frecuencia donde la ganancia del filtro debe ser unitaria ( 0 dB) esto es la banda pasante del filtro
+F0dB=0;                       % F0dB es la frecuencia donde la ganancia del filtro debe ser unitaria ( 0 dB) esto es la banda pasante del filtro
 Zo=exp(-j*2*pi*F0dB*1/fs);    % Z=e-jWT
 gain = abs(polyval(h,Zo));    % mod H(ejWT) evaluado en F0dB que es la ganancia actual del filtro en esa frecuencia
 h = h/gain;                   % Normalizamos la h de esta manera los coeficentes del filtro no superan la unidad 
@@ -131,7 +131,7 @@ fprintf(fid,'\r\n');
 fclose(fid);
 
 % Compile 
-%!asm filtro  % compile and link 
-%!lnk filtro  % executable code is filtro.cld
+!asm filtro  % compile and link 
+!lnk filtro  % executable code is filtro.cld
 
 
